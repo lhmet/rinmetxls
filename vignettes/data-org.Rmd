@@ -152,9 +152,14 @@ Os dados horários distribuídos nos arquivos Excel são armazenados no Tempo Un
 
 Os dados dentro do arquivo Execel arranjados conforme mostrado na Figura abaixo.
 
-```{r, fig.align='center', fig.cap="Figura 1. Imagem de um arquivo Excel (1) para visualização da estrutura dos dados.", out.height="90%", out.width="90%", echo=FALSE, eval = FALSE}
-fig_path <- system.file("vignettes/pscreen-excel-data.png")
-include_graphics(fig_path)
+
+
+```{r, fig.align='center', fig.cap="Figura 1. Arranjo dos dados dentro de um arquivo Excel (arquivo 1).", out.height="90%", out.width="90%", echo=FALSE, eval = TRUE}
+#<img src="pscreen-excel-data.png" width="80%">
+#dir(here::here("vignettes"))
+#fs::dir_ls(system.file("vignettes", package = "rinmetxls"))
+#fig_path <- system.file("vignettes/pscreen-excel-data.png", package = "rinmetxls")
+include_graphics("pscreen-excel-data.png")
 ```
 
 Há um cabeçalho ocupando cerca de 10 linhas antes da tabela de dados horários. Este cabeçalho em geral contém os metadados da EMA. 
