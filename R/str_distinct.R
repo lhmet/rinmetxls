@@ -1,14 +1,21 @@
-#' Extract distinct characters that differ between two strings
-#'
-#' @param a first string
-#' @param b second string
-#'
-#' @return a character vector with strings not found in a or b
-#' @export
-#' @detais This function was build based on code from Colonel Beauvel.
-#' @source https://stackoverflow.com/questions/36171554/extract-distinct-characters-that-differ-between-two-strings?noredirect=1&lq=1
-#'
+#' @title Extract characters that differ between two strings
+#' @description
+#' @param a character vector
+#' @param b character vector
+#' @return character vector with strings in a that are not in b
+#' @details
 #' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  str_distinct("abc", "cde")
+#'  str_distinct("AERRRTX", "TRRA")
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[data.table]{data.table-package}}
+#' @rdname str_distinct
+#' @export
+#' @importFrom data.table data.table
 str_distinct <- function(a, b) {
   x <- data.table::data.table(table(strsplit(a, "")[[1]]))
   y <- data.table::data.table(table(strsplit(b, "")[[1]]))
