@@ -1,5 +1,9 @@
-easypackages::libraries(c("dplyr", "fs"))
+easypackages::libraries(c("here", "dplyr", "fs"))
 
+# dir_exists(here::here("inst/extdata", "dvd_xls_files"))
+# fs::dir_delete()
+
+here()
 # script para gerar links para os arquivos xls das EMAs do INMET
 fs::dir_create(here("inst/extdata", "dvd_xls_files"))
 
@@ -31,6 +35,8 @@ fnames_extdata <- fs::path(path_extdata, fs::path_file(fnames_raw)) %>%
   fs::path_abs()
 
 fs::link_create(fnames_raw, fnames_extdata)
+#fs::link_delete(fnames_extdata)
+dir_ls("inst/extdata/dvd_xls_files", recursive = TRUE)
 # link_delete(fnames_extdata)
 
 ## print files as characters
