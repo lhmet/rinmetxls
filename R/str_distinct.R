@@ -1,9 +1,7 @@
 #' @title Extract characters that differ between two strings
-#' @description
 #' @param a character vector
 #' @param b character vector
 #' @return character vector with strings in a that are not in b
-#' @details
 #' @examples
 #' \dontrun{
 #' if(interactive()){
