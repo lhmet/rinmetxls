@@ -1,3 +1,4 @@
+^inst/extdata/dvd_xls_files$
 ^LICENSE\.md$
 ^data-raw$
 ^README\.Rmd$
