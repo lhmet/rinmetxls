@@ -28,9 +28,7 @@ knitr::opts_chunk$set(
 
 ## Introdução
 
-Os dados horários de Estações Meteorológicas Automáticas ([EMA](http://www.inmet.gov.br/portal/index.php?r=estacoes/estacoesAutomaticas)) solicitados no [site do INMET](http://www.inmet.gov.br/portal/index.php?r=home/contato) são enviados em um DVD com arquivos em formato [Microsoft Excel](https://en.wikipedia.org/wiki/Microsoft_Excel).
-
-Nesta vinheta mostra-se como são organizados os arquivos no DVD para posteriormente processá-los adequadamente.
+Os dados horários de Estações Meteorológicas Automáticas ([EMA](http://www.inmet.gov.br/portal/index.php?r=estacoes/estacoesAutomaticas)) solicitados no [site do INMET](http://www.inmet.gov.br/portal/index.php?r=home/contato) são enviados em um DVD com arquivos em formato [Microsoft Excel](https://en.wikipedia.org/wiki/Microsoft_Excel). Nesta vinheta mostra-se como são organizados os arquivos no DVD para posteriormente processá-los adequadamente.
 
 
 ## Estrutura de diretórios
@@ -137,19 +135,14 @@ Há um cabeçalho ocupando cerca de 10 linhas antes da tabela de dados horários
 
 
 
-De forma generalizada o arranjo retangular dos  dados horários pode ser resumido pelo seguinte padrão:
+De forma generalizada o arranjo retangular dos dados horários para *p* dias, *r* variáveis e 24 horas (0 às 23 h) pode ser resumido pelo seguinte padrão:
 
-
----         | var1 | var1 | var1 | var1  | var1| ...| varn  | varn  | varn
----         |---   |---    |---    |---    |---  |---    |---    |---
-HORA UTC   | 0000 | 0100 | 0200 | ... | 2300| ...|0000 | 0100 | 
-01-jan-2010 | 22,1 | 21,0 | 20,4 | ... | 19,1 | ...|12,1 | 10,9 | 
-02-jan-2010 | 26,0 | 25,0 | 24,5 | ... | 20,2 | ...|15,2 | 12,2 |
-03-jan-2010 | 26,7 | 26,3 | 25,3 | ... | 14,5 | ...|15,1 | 18,1 |
-04-jan-2010 | 23,5 | 24,5 | 23,1 | ... | 12,6 | ...|21,3 | 13,2 |
-05-jan-2010 | 23,4 | 23,2 | 22,9 | ... | 28,0 | ...|28,9 | 12,8 |
-06-jan-2010 | 24,4 | 24,1 | 24,3 | ... | 15,6 | ...|14,2 | 22,9 |
-... | ... | ... | ...| ... | ...| ...| ...|...|
+| ---         	| var_1       	| var_1       	| var_1 	| var_1        	| ... 	| var_r       	| var_r       	| var_r 	| var_r        	|
+|-------------	|-------------	|-------------	|-------	|--------------	|-----	|-------------	|-------------	|-------	|--------------	|
+| HORA UTC    	| 0000        	| 0100        	| ...   	| 2300         	| ... 	| 0000        	| 0100        	| ...   	| 2300         	|
+| dd-mmm-YYYY 	| obs(d1, h0) 	| obs(d1, h1) 	| ...   	| obs(d1, h23) 	| ... 	| obs(d1, h0) 	| obs(d1, h1) 	| ...   	| obs(d1, h23) 	|
+| ...         	| ...         	| ...         	| ...   	| ...          	| ... 	| ...         	| ...         	| ...   	| ...          	|
+| dd-mmm-YYYY 	| obs(dp, h0) 	| obs(dp, h1) 	| ...   	| obs(dp, h23) 	| ... 	| obs(dp, h0) 	| ...         	| ...   	| obs(dp, h23) 	|
 
 
 
