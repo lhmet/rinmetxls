@@ -35,7 +35,7 @@ Nesta vinheta mostra-se como são organizados os arquivos no DVD para posteriorm
 ## Pré-requisitos
 
 ```{r chun1, message=FALSE, warning=FALSE}
-pcks <- c("knitr", "fs", "here", "dplyr")
+pcks <- c("knitr", "fs", "dplyr")
 easypackages::libraries(pcks)
 ```
 
@@ -82,7 +82,7 @@ dir_ls(path_state) %>%
 
 ## Arquivos de dados de uma  EMA
 
-Na lista acima acima há dois arquivos com nomes semelhantes para uma mesma EMA. **Os arquivos referem-se a diferentes variáveis meteorológicas e serão chamados por convenção como**:
+Na lista acima há dois arquivos com nomes semelhantes para uma mesma EMA. **Os arquivos referem-se a diferentes variáveis meteorológicas e serão chamados por convenção como**:
 
 - **arquivo 1**: arquivo da EMA com dados de temperatura e umidade do ar;
 
@@ -98,20 +98,17 @@ fs::path_rel()
 
 O nome dos arquivos segue o padrão:
 
-`_ESTADO_[A-Z]{1}xnn_NOMEESTACAO_.xls.xls`
+`___ESTADO_[A-Z]{1}xnn_NOMEESTACAO_.xls.xls`
 
-O arquivos acima são de uma EMA do estado do Amazonas (*AM*) com código identificador *A101* e o nome da estação é *Manaus*. Na maioria das estações o nome da estação coincide com o nome do Município.
+O arquivos acima são de uma EMA do estado do Amazonas (*AM*) com código identificador *A101* e o nome da estação é *Manaus*. Na maioria das estações o nome da estação é o mesmo do Município.
 
-A parte do nome dos arquivos `[A-Z]{1}xnn` refere-se ao código identificador das EMAs que segue o seguinte padrão:
+A parte `[A-Z]{1}xnn` do nome do arquivo refere-se ao código identificador das EMAs que segue o seguinte padrão:
 
 - `[A-Z]{1}` quer dizer uma letra maiúscula (em geral as letras `A` ou `B`)
 
 - `x` é o identificador dos 10 [distritos](http://www.inmet.gov.br/portal/index.php?r=home/page&page=enderecos) do INMET, x varia de **0** a **9**, o **0** indica o 10° distrito (Goiânia).
 
 - `nn` é um n° sequencial da ordem de instalação em cada distrito.
-
-
-Onde `Axnn` é o código identificador da estação. `A` refere-se a estação automática, `x` ao distrito e `nn` ao sequencial de instalação em cada distrito. 
 
 
 As variáveis armazenadas nos arquivos 1 e 2 de uma EMA são listadas, respectivamente, na tabela 1 e 2. A coluna `Nome` indica os nomes atribuídos às variáveis após o processamento de dados.
@@ -148,41 +145,36 @@ As variáveis armazenadas nos arquivos 1 e 2 de uma EMA são listadas, respectiv
 Os dados horários distribuídos nos arquivos Excel são armazenados no Tempo Universal Coordenado [UTC](https://pt.wikipedia.org/wiki/Tempo_Universal_Coordenado). 
 
 
-### Estrutura dos dados de um arquivo
+### Arranjo dos dados dentro do arquivo Excel
 
-Os dados dentro do arquivo Execel arranjados conforme mostrado na Figura abaixo.
-
+O arranjo dos dados dentro do arquivo Excel é mostrado na Figura 1.
 
 
 ```{r, fig.align='center', fig.cap="Figura 1. Arranjo dos dados dentro de um arquivo Excel (arquivo 1).", out.height="90%", out.width="90%", echo=FALSE, eval = TRUE}
-#<img src="pscreen-excel-data.png" width="80%">
-#dir(here::here("vignettes"))
-#fs::dir_ls(system.file("vignettes", package = "rinmetxls"))
-#fig_path <- system.file("vignettes/pscreen-excel-data.png", package = "rinmetxls")
 include_graphics("pscreen-excel-data.png")
 ```
 
 Há um cabeçalho ocupando cerca de 10 linhas antes da tabela de dados horários. Este cabeçalho em geral contém os metadados da EMA. 
 
-Os dados meteorológicos do **arquivo 1** são estruturados em uma tabela com um número fixo de linhas[^1] e 217 colunas (9 variáveis $\times$ 24 horas[^2] $+$ coluna da data). Cada linha corresponde a uma observação diária e cada coluna uma observação horária de uma variável meteorológica. Há várias variáveis ao longo das colunas.
+Os dados meteorológicos do **arquivo 1** são estruturados em uma tabela com um número fixo de linhas[^1] e 217 colunas (9 variáveis $\times$ 24 horas[^2] $+$ coluna da data). Cada linha corresponde a um dia e cada coluna a uma observação horária de uma variável meteorológica. Há várias variáveis ao longo das colunas.
 
 De forma generalizada o arranjo retangular dos  dados horários pode ser resumido pelo seguinte padrão:
 
 
----         | var1 | var1	| var1	| var1  | var1| ...| varn  | varn  | varn
+---         | var1 | var1 | var1 | var1  | var1| ...| varn  | varn  | varn
 ---         |---   |---    |---    |---    |---  |---    |---    |---
-HORA UTC	  | 0000	| 0100	| 0200	| ... | 2300| ...|0000	| 0100 |	
-01-jan-2010	| 22,1	| 21,0	| 20,4	| ... | 19,1	| ...|12,1	| 10,9 |	
-02-jan-2010	| 26,0	| 25,0	| 24,5	| ... | 20,2	| ...|15,2	| 12,2 |
-03-jan-2010	| 26,7	| 26,3	| 25,3	| ... | 14,5	| ...|15,1	| 18,1 |
-04-jan-2010	| 23,5	| 24,5	| 23,1	| ... | 12,6	| ...|21,3	| 13,2 |
-05-jan-2010	| 23,4	| 23,2	| 22,9	| ... | 28,0	| ...|28,9	| 12,8 |
-06-jan-2010	| 24,4	| 24,1	| 24,3	| ... | 15,6	| ...|14,2	| 22,9 |
-...	| ...	| ...	| ...| ... | ...| ...| ...|...|
+HORA UTC   | 0000 | 0100 | 0200 | ... | 2300| ...|0000 | 0100 | 
+01-jan-2010 | 22,1 | 21,0 | 20,4 | ... | 19,1 | ...|12,1 | 10,9 | 
+02-jan-2010 | 26,0 | 25,0 | 24,5 | ... | 20,2 | ...|15,2 | 12,2 |
+03-jan-2010 | 26,7 | 26,3 | 25,3 | ... | 14,5 | ...|15,1 | 18,1 |
+04-jan-2010 | 23,5 | 24,5 | 23,1 | ... | 12,6 | ...|21,3 | 13,2 |
+05-jan-2010 | 23,4 | 23,2 | 22,9 | ... | 28,0 | ...|28,9 | 12,8 |
+06-jan-2010 | 24,4 | 24,1 | 24,3 | ... | 15,6 | ...|14,2 | 22,9 |
+... | ... | ... | ...| ... | ...| ...| ...|...|
 
 
 
-[^1]: o número de linhas varia de acordo com o período de dados solicita ao INMET e também  da forma como os dados foram organizados (ex.: no DVD deste exemplo de solicitação os dados foram divididos entre pré-2015 e pós-2015).
+[^1]: o número de linhas varia de acordo com o período de dados solicitado ao INMET e também da forma como os dados foram organizados (ex.: no DVD deste exemplo de solicitação os dados foram divididos entre pré-2015 e pós-2015).
 
 
 [^2]: no **arquivo 2** nem todas variáveis tem 24 observações horárias, a exceção é a radiação solar global incidente que tem 14 observações, das 9 às 22 UTC.
@@ -195,15 +187,6 @@ Informações técnicas sobre a rede de EMA do INMET podem ser consultadas em:
 - [nota técnica do INMET](http://www.inmet.gov.br/portal/css/content/topo_iframe/pdf/Nota_Tecnica-Rede_estacoes_INMET.pdf) 
 
 - http://www.inmet.gov.br/portal/index.php?r=estacoes/estacoesAutomaticas
-
-# Conclusão
-
-Os dados meteorológicos horários da rede de EMAs do INMET são distribuídos em formato Excel. Associado a cada EMA há um par de arquivos que armazenam variáveis meteorológicas distintas. Estes arquivos serão convencionados por: 
-
-- **arquivo 1**: arquivo da EMA com observações de 9 variáveis relacionadas a temperatura e umidade do ar;
-
-- **arquivo 2**: arquivo da EMA com observações de 8 variáveis meteorológicas diferentes (relacionadas à pressão atmosférica, velocidade e direção do vento, radiação solar global, precipitação); 
-
 
 
 # Informações da seção
