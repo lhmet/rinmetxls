@@ -25,6 +25,3 @@ if(interactive()){
  }
 }
 }
-\seealso{
-\code{\link[data.table]{data.table-package}}
-}

@@ -2,4 +2,5 @@
 
 export(dist_str)
 export(str_distinct)
+importFrom(data.table,data.table)
 importFrom(stringdist,stringdist)

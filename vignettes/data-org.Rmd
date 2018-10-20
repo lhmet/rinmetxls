@@ -32,26 +32,19 @@ Os dados horários de Estações Meteorológicas Automáticas ([EMA](http://www.
 
 Nesta vinheta mostra-se como são organizados os arquivos no DVD para posteriormente processá-los adequadamente.
 
-## Pré-requisitos
-
-```{r chun1, message=FALSE, warning=FALSE}
-pcks <- c("knitr", "fs", "dplyr")
-easypackages::libraries(pcks)
-```
-
 
 ## Estrutura de diretórios
 
 Os arquivos Excel das EMAs do INMET são fornecidos em uma estrutura de diretórios organizada por região do Brasil e período.
 
 ```{r chun5}
-data_dir <- system.file("extdata/dvd_xls_files", package = "rinmetxls")
+data_dir <- "dvd_xls_files"
 # diretorios das regioes, 
-reg_dirs <- data_dir %>%
-  fs::dir_ls() %>%
-  fs::path_rel()
-reg_dirs
+path_regions <- dir(data_dir, full.names = TRUE)
+path_regions
 ```
+
+
 
 
 Os diretórios nomeados `NOMEREGIAO` tem dados prévios à 2015, aqueles nomeados `NOMEREGIAO_2017` tem dados de 2015 a março de 2017.
@@ -59,26 +52,16 @@ Os diretórios nomeados `NOMEREGIAO` tem dados prévios à 2015, aqueles nomeado
 No diretório de cada região há sub-diretórios dos estados da região. Por exemplo, para região NORTE temos os seguintes sub-diretórios:
 
 ```{r chun6}
-path_region <- path(data_dir, "NORTE")
-
-path_region %>%
-  fs::dir_ls() %>%
-  fs::path_rel()
-
+path_norte <- dir(file.path(data_dir, "NORTE"), full.names = TRUE)
+path_norte
 ```
 
-No sub-diretório de um estado estão os arquivos de dados das EMAs localizadas no estado. Aqui são mostrados apenas os 10 primeiros arquivos do estado do AM.
+No sub-diretório de um estado estão os arquivos de dados das EMAs localizadas no estado. Abaixo são mostrados os arquivos do estado do AC.
 
 ```{r chun7}
-state <- "AM"
-state <- paste0("_", state)
-path_state <- path(path_region, state)
-dir_ls(path_state) %>%
-  head(n = 10) %>%
-  fs::path_rel()
+(path_state <- path_norte[1])
+list.files(path_state, full.names = TRUE)
 ```
-
-
 
 ## Arquivos de dados de uma  EMA
 
@@ -92,8 +75,7 @@ A única diferença **aparente** do arquivo 2 para o 1 é que seu nome apresenta
 
 
 ```{r chun8}
-fs::dir_ls(path_state)[1:2] %>%
-fs::path_rel()  
+dir(path_state, full.names = TRUE)[1:2]
 ```
 
 O nome dos arquivos segue o padrão:
@@ -147,16 +129,13 @@ Os dados horários distribuídos nos arquivos Excel são armazenados no Tempo Un
 
 ### Arranjo dos dados dentro do arquivo Excel
 
-O arranjo dos dados dentro do arquivo Excel é mostrado na Figura 1.
+Os dados são estruturados em uma tabela com um número fixo de linhas[^1]. O número de colunas varia com o tipo de dados (Tabela 2). Por exemplo, o arquivo 1 tem `r (9*24) + 1` colunas (9 variáveis x 24 horas[^2] + coluna da data. Cada linha corresponde a um dia e cada coluna a uma observação horária de uma variável meteorológica. Há várias variáveis ao longo das colunas. O arranjo dos dados dentro do arquivo Excel é mostrado abaixo para o arquivo 1.
 
-
-```{r, fig.align='center', fig.cap="Figura 1. Arranjo dos dados dentro de um arquivo Excel (arquivo 1).", out.height="90%", out.width="90%", echo=FALSE, eval = TRUE}
-include_graphics("pscreen-excel-data.png")
-```
+<img src="pscreen-excel-data.png" width="90%">
 
 Há um cabeçalho ocupando cerca de 10 linhas antes da tabela de dados horários. Este cabeçalho em geral contém os metadados da EMA. 
 
-Os dados meteorológicos do **arquivo 1** são estruturados em uma tabela com um número fixo de linhas[^1] e 217 colunas (9 variáveis $\times$ 24 horas[^2] $+$ coluna da data). Cada linha corresponde a um dia e cada coluna a uma observação horária de uma variável meteorológica. Há várias variáveis ao longo das colunas.
+
 
 De forma generalizada o arranjo retangular dos  dados horários pode ser resumido pelo seguinte padrão:
 
