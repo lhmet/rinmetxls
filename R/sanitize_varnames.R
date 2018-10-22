@@ -87,9 +87,9 @@ sanitize_varname <- function(vnames, sep = "_", no_accent = TRUE) {
 
   # Replace any number sequences not preceded by an
   # underscore, with it preceded by an underscore.
-  pat <- paste0("(?<![", sep, "\\p{N}])(\\p{N}+)")
-  rep <- paste0(sep, "\\1")
-  vnames <- gsub(pat, rep, vnames, perl = TRUE)
+  #pat <- paste0("(?<![", sep, "\\p{N}])(\\p{N}+)")
+  #rep <- paste0(sep, "\\1")
+  #vnames <- gsub(pat, rep, vnames, perl = TRUE)
 
 
   # Remove any resulting initial or trailing underscore or multiples
