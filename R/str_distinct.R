@@ -14,7 +14,7 @@
 str_distinct <- function(a, b) {
   y <- table(strsplit(b, "")[[1]])
   x <- table(strsplit(a, "")[[1]])
-  substr(
+  res <- substr(
     setdiff(
       x = paste0(names(x), x),
       y = paste0(names(y), y)
@@ -22,4 +22,6 @@ str_distinct <- function(a, b) {
     start = 1,
     stop = 1
   )
+  if(length(res) == 0) res <- NA
+  return(res)
 }
