@@ -17,7 +17,7 @@
 #'  }
 #' }
 #' @seealso
-#'  \code{\link[stringdist]{stringdist}}
+#'  [stringdist::stringdist()]
 #' @rdname dist_str
 #' @export
 #' @importFrom stringdist stringdist

@@ -33,5 +33,5 @@ if(interactive()){
 }
 }
 \seealso{
-\code{\link[stringdist]{stringdist}}
+\code{\link[stringdist:stringdist]{stringdist::stringdist()}}
 }

@@ -23,29 +23,21 @@ Make a reasonable attempt of converting variables names from a
 dataset into a preferred standard form
 }
 \details{
-`sanitize_varname()` removes or replace the following:
-
-- [Control characters](https://en.wikipedia.org/wiki/C0_and_C1_control_codes)
-
-- [Reserved characters](https://kb.acronis.com/content/39790)
-
-- Unix reserved filenames (`.` and `..`)
-
-- Trailing periods and spaces (invalid on Windows)
-
-- Windows reserved filenames (`CON`, `PRN`, `AUX`, `NUL`, `COM1`, `COM2`,
-  `COM3`, COM4, `COM5`, `COM6`, `COM7`, `COM8`, `COM9`, `LPT1`, `LPT2`,
-  `LPT3`, `LPT4`, `LPT5`, `LPT6`, LPT7, `LPT8`, and `LPT9`)
-
-- any accented noum or punctuation
-
-- any resulting initial or trailing underscore or multiples
-
-- uppercase to lowercase
-
-- repeated seperator
-
-- names starting with a number by a character
+\code{sanitize_varname()} removes or replace the following:
+\itemize{
+\item \href{https://en.wikipedia.org/wiki/C0_and_C1_control_codes}{Control characters}
+\item \href{https://kb.acronis.com/content/39790}{Reserved characters}
+\item Unix reserved filenames (\code{.} and \code{..})
+\item Trailing periods and spaces (invalid on Windows)
+\item Windows reserved filenames (\code{CON}, \code{PRN}, \code{AUX}, \code{NUL}, \code{COM1}, \code{COM2},
+\code{COM3}, COM4, \code{COM5}, \code{COM6}, \code{COM7}, \code{COM8}, \code{COM9}, \code{LPT1}, \code{LPT2},
+\code{LPT3}, \code{LPT4}, \code{LPT5}, \code{LPT6}, LPT7, \code{LPT8}, and \code{LPT9})
+\item any accented noum or punctuation
+\item any resulting initial or trailing underscore or multiples
+\item uppercase to lowercase
+\item repeated seperator
+\item names starting with a number by a character
+}
 }
 \examples{
 sanitize_varname(c("esúpido", "^ ãb ", "..c`a§", "A .xls.xls"))
