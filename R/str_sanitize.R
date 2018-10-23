@@ -1,13 +1,14 @@
-#' @title Sanitize variable names by removing invalid and reserved characters
-#' @description Make a reasonable attempt of converting variables names from a
-#' dataset into a preferred standard form
-#' @param vnames A character vector to be sanitized
-#' @param sep A character vector used to replace invalid characters,
-#' Default: '_'
-#' @param no_accent logical, if is to remove accents from vnames, Default: TRUE
-#' @return A character vector in lowercase and a underscore (sep) to separate
+#' @title Sanitize strings by removing reserved and non portable character
+#' set
+#' @description Make a reasonable attempt of converting a string into a
+#' preferred standard form to name variables and file names
+#' @param vnames character vector to be sanitized
+#' @param sep character of replacements,' Default: '_'
+#' @param no.accent logical, if is to remove accents from `vnames``,
+#' Default: TRUE
+#' @return a character vector in lowercase with underscore (sep) to separate
 #' nouns
-#' @details `sanitize_varname()` removes or replace the following:
+#' @details `str_sanitize()` removes or replace the following:
 #'
 #' - [Control characters](https://en.wikipedia.org/wiki/C0_and_C1_control_codes)
 #'
@@ -21,11 +22,11 @@
 #'   `COM3`, COM4, `COM5`, `COM6`, `COM7`, `COM8`, `COM9`, `LPT1`, `LPT2`,
 #'   `LPT3`, `LPT4`, `LPT5`, `LPT6`, LPT7, `LPT8`, and `LPT9`)
 #'
-#' - any accented noum or punctuation
+#' - any accented noum and punctuation character
 #'
 #' - any resulting initial or trailing underscore or multiples
 #'
-#' - uppercase to lowercase
+#' - uppercase by lowercase
 #'
 #' - repeated seperator
 #'
@@ -33,10 +34,10 @@
 #'
 #'
 #' @examples
-#' sanitize_varname(c("esúpido", "^ ãb ", "..c`a§", "A .xls.xls"))
-#' @rdname sanitize_varnames
+#' str_sanitize(c("esúpido", "^ ãb ", "..c`a§", "A .xls.xls", "1° dia"))
+#' @rdname str_sanitize
 #' @export
-sanitize_varname <- function(vnames, sep = "_", no_accent = TRUE) {
+str_sanitize <- function(vnames, sep = "_", no_accent = TRUE) {
 
 
   vnames <- as.character(vnames)
@@ -55,9 +56,11 @@ sanitize_varname <- function(vnames, sep = "_", no_accent = TRUE) {
     )
   }
 
-  control <- "[[:cntrl:]]"
+
   punctuation <- "[[:punct:]]"
   spaces <- "[[:space:]]"
+
+  control <- "[[:cntrl:]]"
   unix_reserved <- "^[.]+$"
   windows_reserved <- "^(con|prn|aux|nul|com[0-9]|lpt[0-9])([.].*)?$"
   windows_trailing <- "[. ]+$"
