@@ -5,7 +5,7 @@
 \title{Sanitize strings by removing reserved and non portable character
 set}
 \usage{
-str_sanitize(vnames, sep = "_", no_accent = TRUE)
+str_sanitize(vnames, sep = "_", no.accent = TRUE)
 }
 \arguments{
 \item{vnames}{character vector to be sanitized}

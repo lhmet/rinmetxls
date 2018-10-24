@@ -37,7 +37,7 @@
 #' str_sanitize(c("esúpido", "^ ãb ", "..c`a§", "A .xls.xls", "1° dia"))
 #' @rdname str_sanitize
 #' @export
-str_sanitize <- function(vnames, sep = "_", no_accent = TRUE) {
+str_sanitize <- function(vnames, sep = "_", no.accent = TRUE) {
 
 
   vnames <- as.character(vnames)
@@ -46,9 +46,9 @@ str_sanitize <- function(vnames, sep = "_", no_accent = TRUE) {
 
   stopifnot(all(nchar(vnames) < 255))
 
-  if (no_accent) {
-    most <- table(Encoding(vnames))
-    encod <- names(most[which.max(most)])
+  if (no.accent) {
+    #most <- table(Encoding(vnames))
+    #encod <- names(most[which.max(most)])
     vnames <- iconv(
       vnames,
       #from = encod,

@@ -22,20 +22,17 @@ Find the pair of Excel files from a automatic weather station
 \examples{
 \dontrun{
 if(interactive()){
- p <-system.file("inst/extdata/dvd_xls_files", package = "rinmetxls")
-pf <- list.files(
-  p,
-  pattern = ".*[[:punct:]]_\\\\.xls",
-  recursive = TRUE,
-  full.names = TRUE
-)
-find_xls_files(pf[1])
-find_xls_files(pf[2])
-find_xls_files(pf[3])
+  p <- system.file("extdata/dvd_xls_files", package = "rinmetxls")
+  pf <- list.files(
+    p,
+    pattern = ".*[[:punct:]]_\\\\.xls",
+    recursive = TRUE,
+    full.names = TRUE
+  )
+ find_xls_files(pf[1])
+ find_xls_files(pf[2])
+ find_xls_files(pf[3])
  }
 }
-}
-\seealso{
-\code{\link[stringr]{str_extract}}
 }
 \concept{file functions}
