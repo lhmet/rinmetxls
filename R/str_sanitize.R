@@ -3,8 +3,8 @@
 #' @description Make a reasonable attempt of converting a string into a
 #' preferred standard form to name variables and file names
 #' @param vnames character vector to be sanitized
-#' @param sep character of replacements,' Default: '_'
-#' @param no.accent logical, if is to remove accents from `vnames``,
+#' @param sep character of replacements, Default: '_'
+#' @param no.accent logical, if is to remove accents from `vnames`,
 #' Default: TRUE
 #' @return a character vector in lowercase with underscore (sep) to separate
 #' nouns

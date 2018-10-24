@@ -10,9 +10,9 @@ str_sanitize(vnames, sep = "_", no_accent = TRUE)
 \arguments{
 \item{vnames}{character vector to be sanitized}
 
-\item{sep}{character of replacements,' Default: '_'}
+\item{sep}{character of replacements, Default: '_'}
 
-\item{no.accent}{logical, if is to remove accents from `vnames``,
+\item{no.accent}{logical, if is to remove accents from \code{vnames},
 Default: TRUE}
 }
 \value{
