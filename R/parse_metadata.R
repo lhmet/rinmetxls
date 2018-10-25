@@ -1,22 +1,49 @@
-#' Parse lon, lat, alt from data read from a Excel file
+
+parse_name_uf <- function(x) {
+  # x <- xlsdf$x1
+  aws_name_uf <- grep("AUTOM*.TICA", x, value = TRUE)
+  aws_name_uf <- unlist(strsplit(aws_name_uf, " "))
+  aws_name_uf <- aws_name_uf[length(aws_name_uf)]
+  aws_name_uf <- unlist(strsplit(aws_name_uf, "\\/"))
+
+  if (length(aws_name_uf) != 2) {
+    stop("Station name and UF with unexpected pattern in file.")
+  }
+
+  data.frame(name = aws_name_uf[1], uf = aws_name_uf[2])
+}
+
+
+
+#' Parse metadata from header in the Excel file
 #'
 #' @param xlsdf data frame imported by `read_aws_xls_file()`
 #'
-#' @return data frame with AWS coordinates`
+#' @return data frame with columns:
 #'
-parse_coords <- function(xlsdf) {
-
-  # library(dplyr)
+#' - name: station name
+#' - uf: federative unit
+#' - lon: longitude in decimal degrees
+#' - lat: latitude in decimal degrees
+#' - alt: altitude in m
+#'
+parse_metadata <- function(xlsdf) {
+# xlsdf <- awsd
+  x1 <- x2 <- . <- NULL
   stopifnot(!missing(xlsdf), !is.null(xlsdf))
-  ## test
-  # xlsdf <- as.data.frame(awsd)
-  # xlsdf <- metadata %>% data.frame()
+  xlsdf <- as.data.frame(xlsdf)
 
-  names(xlsdf) <- gsub("[_]{1,}", "", names(xlsdf))
 
+  # norm var names
+  xlsdf <- setNames(xlsdf, nm = str_sanitize(names(xlsdf), sep = ""))
+
+  # select metadata
+  # name and uf
+  name_uf_df <- parse_name_uf(xlsdf$x1)
+  # coordinates x, y, z
   xlsdf <- xlsdf %>%
-    dplyr::select(X1, X2) %>%
-    dplyr::filter(X1 %in% c("Alt.", "Lat.", "Lon.")) %>%
+    dplyr::select(x1, x2) %>%
+    dplyr::filter(x1 %in% c("Alt.", "Lat.", "Lon.")) %>%
     data.frame()
 
   ## adjust column names
@@ -45,8 +72,8 @@ parse_coords <- function(xlsdf) {
   }
   xlsdf[, 2] <- gsub("'N|'S", "", xlsdf[, 2])
 
-  ## remove degree string
-  xlsdf[, 2] <- gsub("°", "_", xlsdf[, 2])
+  ## remove degree or Masculine ordinal indicator
+  xlsdf[, 2] <- gsub("(\u00BA|\u00B0)","_", xlsdf[, 2])
 
   ## replace "," by "."
   alt <- as.numeric(gsub(",", ".", xlsdf[1, 2]))
@@ -64,5 +91,7 @@ parse_coords <- function(xlsdf) {
     alt = alt,
     stringsAsFactors = FALSE
   )
+  outdf <- data.frame(name_uf_df, outdf)
+
   return(outdf)
 }

@@ -1,4 +1,5 @@
-check_nfiles <- function(files.found, file.name, id) {
+# Check the number of xls files found
+xls_check <- function(files.found, file.name, id) {
   # selecionar arquivo
   nfiles <- length(files.found)
   if (nfiles == 0 | nfiles > 2) {

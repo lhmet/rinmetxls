@@ -7,28 +7,28 @@
 #' \dontrun{
 #' if(interactive()){
 #'  x <- c("AB", "AA")
-#'  dist_str(x)
+#'  str_dist(x)
 #'  y <- c("AB", "AB")
-#'  dist_str(x)
+#'  str_dist(x)
 #'  z <- c("AB", "BA")
-#'  dist_str(z)
+#'  str_dist(z)
 #'  zz <- c("AA", "AB", "BS")
-#'  dist_str(zz)
+#'  str_dist(zz)
 #'  }
 #' }
 #' @seealso
 #'  [stringdist::stringdist()]
-#' @rdname dist_str
+#' @rdname str_dist
 #' @export
 #' @importFrom stringdist stringdist
-dist_str <- function(x) {
+str_dist <- function(x) {
   if (length(x) != 2) stop("Expected 2 elements in x, get ", length(x))
   x <- as.character(x)
   a <- x[1]
   b <- x[2]
   # a <- as.character(a) %>% str_split(., "") %>% unlist()
   # b <- as.character(b) %>% str_split(., "") %>% unlist()
-  str_dist <- stringdist::stringdist(a, b)
-  str_dist
+  dist_str <- stringdist::stringdist(a, b)
+  dist_str
   # ifelse(is.logical(comp), 0, readr::parse_number(comp))
 }
