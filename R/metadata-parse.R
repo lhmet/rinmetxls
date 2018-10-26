@@ -10,9 +10,10 @@ parse_name_uf <- function(x) {
     stop("Station name and UF with unexpected pattern in file.", call. = TRUE)
   }
 
+  # Trim whitespace
   data.frame(
-    name = aws_name_uf[1],
-    uf = aws_name_uf[2],
+    name = gsub("^\\s+|\\s+$", "", aws_name_uf[1]),
+    uf = gsub("^\\s+|\\s+$", "", aws_name_uf[2]),
     stringsAsFactors = TRUE
   )
 }
@@ -24,13 +25,13 @@ parse_name_uf <- function(x) {
 #' @param xlsdf data frame imported by `read_aws_xls_file()`
 #'
 #' @return data frame with columns:
-#'
 #' - name: station name
 #' - uf: federative unit
 #' - lon: longitude in decimal degrees
 #' - lat: latitude in decimal degrees
 #' - alt: altitude in m
 #'
+#' @export
 #' @importFrom stats setNames
 metadata_parse <- function(xlsdf) {
   # xlsdf <- awsd
