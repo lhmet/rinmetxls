@@ -19,7 +19,7 @@ ncols_by_variable <- function(data.xls){
     names(.) %>%
     grep("col", x = ., value = TRUE, invert = TRUE) %>%
     `[`(tab, .) %>%
-    as.data.frame() %>%
+    as.data.frame(stringAsFactors = FALSE) %>%
     dplyr::mutate(file = attr(data.xls, "meta")[["file"]]) %>%
     tidyr::spread(Var1, Freq) %>%
     dplyr::select(dplyr::one_of(rev(names(.))))
@@ -31,12 +31,13 @@ xls_read <- function(
   file.xls,
   na.strings = "NULL",
   verbose = TRUE
-  ) {
+) {
 
-#   xfiles_l <- list.files("vignettes/dvd_xls_files", recursive = TRUE, full.names = TRUE)
-#   file.xls <- xfiles_l[37]; file.exists(file.xls)
-#   file.xls <- grep("AUSENTES", xfiles_l, value = TRUE)[1]
-#   na.strings = "NULL"; verbose = TRUE
+  #   xfiles_l <- list.files("vignettes/dvd_xls_files", recursive = TRUE, full.names = TRUE)
+  #   grep("",basename(xfiles_l)
+  #   file.xls <- xfiles_l[37]; file.exists(file.xls)
+  #   file.xls <- grep("AUSENTES", xfiles_l, value = TRUE)[1]
+  #   na.strings = "NULL"; verbose = TRUE
 
   # automatic weather station data
   awsd <- readxl::read_excel(
@@ -49,10 +50,15 @@ xls_read <- function(
 
   # join metadata from file name and header in file-----------------------------
   meta_j <- metadata_join(path.file = file.xls, data.xls = awsd)
+
   if (verbose) {
     cat("----------------------------------------", "\n")
     cat(meta_j$id, "\n")
-    cat(paste0(c(t(meta_j)), collapse = "  "), "\n")
+    cat(paste(meta_j$name, meta_j$uf, sep = " - "), "\n")
+    cat(paste(meta_j$name_ffname, meta_j$uf_ffname, sep = " - "), "\n")
+    cat(paste(meta_j$lon, meta_j$lat, sep = "   "), "\n")
+
+    #cat(paste0(c(t(meta_j)), collapse = "  "), "\n")
   }
 
   # select body data and sanitize varnames-------------------------------------
@@ -79,11 +85,17 @@ xls_read <- function(
   # deal with empty data in excel file
   if (nrow(data_body) == 1) {
     data_body[2, ] <- NA
-    warning("Can't find data in file: ", paste(file.xls), "\n",
-            "Filling data with one row of NAs.", "\n")
-  }
-  # add metadata as a attribute
-  attr(data_body, which = "meta") <- data.frame(meta_j, file = file.xls)
+    warning(
+      "Can't find data in file: ", paste(file.xls),
+      "\n",
+      "Filling data with one row of NAs.", "\n"
+    )
+  }  # add metadata as a attribute
+  attr(data_body, which = "meta") <- data.frame(
+    meta_j,
+    file = file.xls,
+    stringsAsFactors = FALSE
+  )
   return(data_body)
 }
 
@@ -108,6 +120,7 @@ sel <- str_detect(fpath, ".*_(\\S|\\s)\\.xls\\.xls") |
 
 length(xfiles_l[sel])
 
+# verficação dos arquivos 2 (outras variáveis)
 l <- lapply(xfiles_l[sel], function(ifile) xls_read(file.xls = ifile))
 
 # check num od columns by variable

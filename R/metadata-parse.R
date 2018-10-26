@@ -10,7 +10,11 @@ parse_name_uf <- function(x) {
     stop("Station name and UF with unexpected pattern in file.", call. = TRUE)
   }
 
-  data.frame(name = aws_name_uf[1], uf = aws_name_uf[2])
+  data.frame(
+    name = aws_name_uf[1],
+    uf = aws_name_uf[2],
+    stringsAsFactors = TRUE
+  )
 }
 
 
@@ -29,9 +33,9 @@ parse_name_uf <- function(x) {
 #'
 #' @importFrom stats setNames
 metadata_parse <- function(xlsdf) {
-# xlsdf <- awsd
+  # xlsdf <- awsd
   stopifnot(!missing(xlsdf), !is.null(xlsdf))
-  xlsdf <- as.data.frame(xlsdf)
+  xlsdf <- as.data.frame(xlsdf, stringsAsFactors = TRUE)
 
   # norm var names
   xlsdf <- setNames(xlsdf, nm = str_sanitize(names(xlsdf), sep = ""))
@@ -48,11 +52,11 @@ metadata_parse <- function(xlsdf) {
   xlsdf[, 1] <- tolower(gsub("\\.", "", xlsdf[, 1]))
 
   ## columns numbers
-xlsdf[, 2] <- gsub(
-  "m",
-  "",
-  gsub("\\.", "", xlsdf[, 2])
-)
+  xlsdf[, 2] <- gsub(
+    "m",
+    "",
+    gsub("\\.", "", xlsdf[, 2])
+  )
   ## lon sign
   if (length(grep("W", xlsdf[, 2])) > 0) {
     lon_sign <- -1
@@ -70,7 +74,7 @@ xlsdf[, 2] <- gsub(
   xlsdf[, 2] <- gsub("'N|'S", "", xlsdf[, 2])
 
   ## remove degree or Masculine ordinal indicator
-  xlsdf[, 2] <- gsub("(\u00BA|\u00B0)","_", xlsdf[, 2])
+  xlsdf[, 2] <- gsub("(\u00BA|\u00B0)", "_", xlsdf[, 2])
 
   ## replace "," by "."
   alt <- as.numeric(gsub(",", ".", xlsdf[1, 2]))
@@ -88,7 +92,11 @@ xlsdf[, 2] <- gsub(
     alt = alt,
     stringsAsFactors = FALSE
   )
-  outdf <- data.frame(name_uf_df, outdf)
+  outdf <- data.frame(
+    name_uf_df,
+    outdf,
+    stringsAsFactors = TRUE
+  )
 
   return(outdf)
 }
