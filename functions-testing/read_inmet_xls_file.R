@@ -13,16 +13,17 @@ metadata_join <- function(path.file, data.xls){
 # Function to count number of cols by variable in data body from a excel file
 # data.xls is the output of xls_read()
 ncols_by_variable <- function(data.xls){
-  nms <- names(data.xls); rm(data.xls)
+  nms <- names(data.xls)#; rm(data.xls)
   tab <- table(str_sanitize(nms))
   res <- tab %>%
     names(.) %>%
     grep("col", x = ., value = TRUE, invert = TRUE) %>%
     `[`(tab, .) %>%
     as.data.frame() %>%
-    dplyr::mutate(file = file.xls) %>%
+    dplyr::mutate(file = attr(data.xls, "meta")[["file"]]) %>%
     tidyr::spread(Var1, Freq) %>%
     dplyr::select(dplyr::one_of(rev(names(.))))
+  return(res)
 }
 
 
@@ -50,7 +51,7 @@ xls_read <- function(
   meta_j <- metadata_join(path.file = file.xls, data.xls = awsd)
   if (verbose) {
     cat("----------------------------------------", "\n")
-    cat(meta_j$id)
+    cat(meta_j$id, "\n")
     cat(paste0(c(t(meta_j)), collapse = "  "), "\n")
   }
 
@@ -108,6 +109,17 @@ sel <- str_detect(fpath, ".*_(\\S|\\s)\\.xls\\.xls") |
 length(xfiles_l[sel])
 
 l <- lapply(xfiles_l[sel], function(ifile) xls_read(file.xls = ifile))
+
+# check num od columns by variable
+l_nc_vars <- plyr::ldply(l, function(x) {
+  cat(attr(x, "meta")[["id"]], "\n")
+  ncols_by_variable(x)
+})
+# muito importante antes de importar dados
+dplyr::filter(l_nc_vars, !is.na(umidade_relativa_do_ar))
+
+View(l_nc_vars)
+
 l_df <- plyr::ldply(l)
 l_df %>%
   dplyr::group_by(Var1) %>%
