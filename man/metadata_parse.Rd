@@ -4,10 +4,10 @@
 \alias{metadata_parse}
 \title{Parse metadata from header in the Excel file}
 \usage{
-metadata_parse(xlsdf)
+metadata_parse(data.xls)
 }
 \arguments{
-\item{xlsdf}{data frame imported by \code{read_aws_xls_file()}}
+\item{data.xls}{data frame imported by \code{\link{xls_read}}}
 }
 \value{
 data frame with columns:
@@ -22,3 +22,12 @@ data frame with columns:
 \description{
 Parse metadata from header in the Excel file
 }
+\details{
+This function is used in \code{\link{xls_read}} to extract metadata
+from the header in the Excel file.
+}
+\seealso{
+Other metadata functions: \code{\link{metadata_ffilename}},
+  \code{\link{metadata_join}}
+}
+\concept{metadata functions}

@@ -1,7 +1,20 @@
-# Function to join metadata obtained from different sources
+#' @title Join metadata obtained from different sources
+#' @description Join metadata obtained from (i) the name of the Excel file and
+#' (ii) the header in the Excel file.
+#' @param path.file path to Excel file
+#' @param data.xls data frame
+#' @return data frame with columns:
+#' - name, station name obtained from header in file
+#' - uf, federative unit obtained from header in file
+#' - lon, longitude (decimal degrees)
+#' - lat, latitude (decimal degrees)
+#' - uf_ffname, federative unit obtained from file name
+#' - name_ffname, station name obtained from file name
+#' - id, station identification code obtained from file name
+#' @family metadata functions
 metadata_join <- function(path.file, data.xls){
   # metadata from hedear inside xls file
-  meta_fheader <- metadata_parse(xlsdf = data.xls)
+  meta_fheader <- metadata_parse(data.xls)
   # metadata from xls file name
   meta_ffname <- metadata_ffilename(file.name = path.file)
   # merge metadata
@@ -10,9 +23,44 @@ metadata_join <- function(path.file, data.xls){
 }
 
 
-# Function to count number of cols by variable in data body from a excel file
-# data.xls is the output of xls_read()
+
+#' @title Number of columns for each variable in data
+#' @description Count the number of columns for each variable found in Excel
+#' data file
+#' @param data.xls is the output data frame from \code{\link{xls_read}}
+#' @return data frame
+#' @details This function is used to check whether the number of columns in
+#' each variable in the Excel file are the same for the same data type (1 or 2).
+#' It used as input the output of the function \code{\link{xls_read}}.
+#' This identifies non-standard files of data arrangement.
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#' library(stringr)
+#' xfiles_l <- list.files("vignettes/dvd_xls_files", recursive = TRUE, full.names = TRUE)
+#' fpath <- basename(xfiles_l)
+#' length(xfiles_l)
+#' # select file 2
+#' sel <- str_detect(fpath, ".*_(\\S|\\s)\\.xls\\.xls") |
+#'   str_detect(fpath, ".*[:punct:]_\\.xls") |
+#'   str_detect(fpath, ".*[A-z]{1}_\\.xls\\.xls") |
+#'   str_detect(fpath, ".*[A-z]{1}_V\\.xls\\.xls")
+#' length(xfiles_l[sel])
+#' # verficação dos arquivos 2 (outras variáveis)
+#' data_l <- lapply(xfiles_l[sel], function(ifile) xls_read(file.xls = ifile))
+#' # check num od columns by variable
+#' ncol_vars <- plyr::ldply(l, function(x) {
+#'   cat(attr(x, "meta")[["id"]], "\n")
+#'   ncols_by_variable(x)
+#' })
+#' head(ncol_vars)
+#'  }
+#' }
+#' @importFrom dplyr mutate select one_of
+#' @importFrom tidyr spread
+#' @family data-check functions
 ncols_by_variable <- function(data.xls){
+  Var1 <- Freq <- . <- NULL
   nms <- names(data.xls)#; rm(data.xls)
   tab <- table(str_sanitize(nms))
   res <- tab %>%
@@ -27,22 +75,64 @@ ncols_by_variable <- function(data.xls){
 }
 
 
+#' @title Read and select data
+#' @description This function Reads Excel data file, determine boundaries of
+#' the table (body data), get metadata from AWS and add it as a attribute of
+#' output data frame
+#' @param file.xls character, path to Excel file
+#' @inheritParams readxl::read_excel
+#' @inheritParams utils::install.packages
+#' @return data frame
+#' @details
+#' xlsread() read the data in the excel file and determine
+#' the limits of the data table, that is, the body of the data (excludes header
+#'  with AWS metadata).
+#'
+#' The initial row of data (line with name of the variables) is detected by
+#' searching for the line with at least 3 letters, in order to find the name of
+#' the meteorological variables. This procedure was adopted because depending
+#' on the data request to INMET the file may contain variables in order and with
+#'  different names.
+#'
+#' Automatic meteorological station (AWS) metadata will be extracted from two
+#' sources: (i) the name of the Excel file and (ii) the header in the Excel
+#' file. The metadata is included as an attribute in the data frame with the
+#' data imported from the Excel file.
+#' @examples
+#' \dontrun{
+#' xls_list <- list.files(
+#'   system.file("vignettes/dvd_xls_files", package = "rinmetxls"),
+#'   full.names = TRUE, recursive = TRUE
+#' )
+#' xls_file <- grep("BELEM", xls_list, value = TRUE)[1]
+#' if (file.exists(xls_file)) {
+#'   aws_data <- xls_read(xls_file)
+#'   str(aws_data)
+#' }
+#'}
+#' @seealso
+#'  \code{\link[readxl]{read_excel}}
+#' @rdname xls_read
+#' @export
+#' @importFrom readxl read_excel
+#' @importFrom stats setNames
+#' @importFrom dplyr select pull slice
 xls_read <- function(
   file.xls,
-  na.strings = "NULL",
+  na = "NULL",
   verbose = TRUE
 ) {
 
   #   xfiles_l <- list.files("vignettes/dvd_xls_files", recursive = TRUE, full.names = TRUE)
-  #   grep("",basename(xfiles_l)
+  #   grep("BELEM",basename(xfiles_l)
   #   file.xls <- xfiles_l[37]; file.exists(file.xls)
   #   file.xls <- grep("AUSENTES", xfiles_l, value = TRUE)[1]
-  #   na.strings = "NULL"; verbose = TRUE
+  #   na = "NULL"; verbose = TRUE
 
   # automatic weather station data
   awsd <- readxl::read_excel(
     path = file.xls,
-    na = na.strings,
+    na = na,
     col_names = FALSE
   )
   # sanitize col names before header
@@ -64,7 +154,7 @@ xls_read <- function(
   # select body data and sanitize varnames-------------------------------------
 
   # find row from which data starts
-  . <- NULL
+  x2 <- . <- NULL
   srow <- awsd %>%
     dplyr::select(x2) %>%
     dplyr::pull(x2) %>%

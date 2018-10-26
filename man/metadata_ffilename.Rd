@@ -33,3 +33,8 @@ if(interactive()){
  }
 }
 }
+\seealso{
+Other metadata functions: \code{\link{metadata_join}},
+  \code{\link{metadata_parse}}
+}
+\concept{metadata functions}

@@ -18,7 +18,7 @@
 #'  }
 #' }
 #' @export
-#'
+#' @family metadata functions
 metadata_ffilename <- function(file.name) {
   # file.name <- basename(xfiles_l)
   file.name <- as.character(file.name)
