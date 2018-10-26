@@ -78,7 +78,8 @@ xls_read <- function(
   # deal with empty data in excel file
   if (nrow(data_body) == 1) {
     data_body[2, ] <- NA
-    warning("")
+    warning("Can't find data in file: ", paste(file.xls), "\n",
+            "Filling data with one row of NAs.", "\n")
   }
   # add metadata as a attribute
   attr(data_body, which = "meta") <- data.frame(meta_j, file = file.xls)
