@@ -9,7 +9,9 @@ Depends: R (>= 3.4.4)
 Imports: 
     stringdist,
     magrittr,
-    dplyr
+    dplyr,
+    tidyr,
+    readxl
 Suggests: 
     knitr,
     rmarkdown,
