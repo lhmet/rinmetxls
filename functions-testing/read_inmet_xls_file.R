@@ -110,6 +110,7 @@ xls_read <- function(
 
 
 library(stringr)
+xfiles_l <- list.files("vignettes/dvd_xls_files", recursive = TRUE, full.names = TRUE)
 fpath <- basename(xfiles_l)
 length(xfiles_l)
 
