@@ -79,7 +79,7 @@ xls_read <- function(
   data_body <- awsd %>%
     # throw away header
     dplyr::slice(-(1:srow)) %>%
-    stats::setNames(nms)
+    stats::setNames(nm = nms)
   rm(awsd)
 
   # deal with empty data in excel file
