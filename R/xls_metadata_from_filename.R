@@ -8,18 +8,18 @@
 #' - name, station name
 #' - id, station identification code
 #'
-#' @details `xls_metadata_from_filename()` get metadata from file name. It is
+#' @details `metadata_ffilename()` get metadata from file name. It is
 #' usefull to compare with metadata obtained from the header in Excel file
 #' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  fname <- "dvd_xls_files/NORTE_2017/AM_2017/__AM_A134_S._G._DA_CACHOEIRA_.xls.xls"
-#'  xls_metadata_from_filename(fname)
+#'  metadata_ffilename(fname)
 #'  }
 #' }
 #' @export
 #'
-xls_metadata_from_filename <- function(file.name) {
+metadata_ffilename <- function(file.name) {
   # file.name <- basename(xfiles_l)
   file.name <- as.character(file.name)
   fname_norm <- toupper(str_sanitize(basename(file.name)))

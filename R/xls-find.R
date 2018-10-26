@@ -29,7 +29,7 @@ xls_find <- function(file.name, verbose = TRUE) {
   # file.name <- pf[1]
 
   # station id is used to find the other Excel file
-  aws_id <- xls_metadata_from_filename(file.name)[["id"]]
+  aws_id <- metadata_ffilename(file.name)[["id"]]
 
   stopifnot(length(aws_id) == 1)
 

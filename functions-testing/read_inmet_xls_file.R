@@ -3,7 +3,7 @@ metadata_join <- function(path.file, data.xls){
   # metadata from hedear inside xls file
   meta_fheader <- metadata_parse(xlsdf = data.xls)
   # metadata from xls file name
-  meta_ffname <- xls_metadata_from_filename(file.name = path.file)
+  meta_ffname <- metadata_ffilename(file.name = path.file)
   # merge metadata
   meta_j <- merge(meta_fheader, meta_ffname, all = TRUE)
   return(meta_j)
