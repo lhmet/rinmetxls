@@ -57,7 +57,7 @@ xls_metadata_from_filename <- function(file.name) {
     do.call(rbind, parse_name_uf_l),
     stringsAsFactors = FALSE
   )
-  names(meta_df) <- c("uf", "name")
+  names(meta_df) <- c("uf_ffname", "name_ffname")
   meta_df$id <- aws_id
   # meta_df$name <- gsub("[A-Z]{1}", "", meta_df$name)
   meta_df

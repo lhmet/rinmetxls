@@ -2,7 +2,7 @@
 parse_name_uf <- function(x) {
   # x <- xlsdf$x1
   aws_name_uf <- grep("AUTOM*.TICA", x, value = TRUE)
-  aws_name_uf <- unlist(strsplit(aws_name_uf, " "))
+  aws_name_uf <- unlist(strsplit(aws_name_uf, "AUTOM*.TICA DE"))
   aws_name_uf <- aws_name_uf[length(aws_name_uf)]
   aws_name_uf <- unlist(strsplit(aws_name_uf, "\\/"))
 
@@ -38,7 +38,7 @@ metadata_parse <- function(xlsdf) {
 
   # select metadata
   # name and uf
-  name_uf_df <- parse_name_uf(xlsdf$x1)
+  name_uf_df <- parse_name_uf(x = xlsdf$x1)
   # coordinates x, y, z
   xlsdf <- subset(xlsdf, sel = c("x1", "x2"))
   xlsdf <- xlsdf[xlsdf$x1 %in% c("Alt.", "Lat.", "Lon."), ]
