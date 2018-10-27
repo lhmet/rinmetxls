@@ -84,7 +84,7 @@ ncols_by_variable <- function(data.xls){
 #' @inheritParams utils::install.packages
 #' @return data frame
 #' @details
-#' xlsread() read the data in the excel file and determine
+#' xls_read() read the data in the excel file and determine
 #' the limits of the data table, that is, the body of the data (excludes header
 #'  with AWS metadata).
 #'
