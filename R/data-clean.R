@@ -2,7 +2,7 @@
 #' @description Clean variable names and parse date
 #' @param data.xls data frame output from \code{\link{xls_read}}
 #' @return data frame with the same values as the input data, but colnames are
-#' normalized and dates are parsed.
+#' normalized and dates are parsed. All variables are character vectors.
 #' @details This function parse dates, nomalize 'variable names' appending
 #'  the hour after each one. Date column is added in last column.
 #'  Files were processed in Excel and SO Windows. There is a note about the
