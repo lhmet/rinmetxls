@@ -1,9 +1,9 @@
 Package: rinmetxls
 Title: Read Meteorological Data From Excel Files Distribuited By INMET
 Version: 0.0.2.9000
-Authors@R: person(given = "First", family = "Last", role = c("aut", "cre"), email
-         = "first.last@example.com")
-Description: What the package does (one paragraph).
+Authors@R: person(given = "Jonatan", family = "Tatsch", role = c("aut", "cre"), email
+         = "lhmet@ufsm.br")
+Description: Clean and tidy meteorological data from Excel files distributed by INMET.
 License: MIT + file LICENSE
 Depends: R (>= 3.4.4)
 Imports: 
