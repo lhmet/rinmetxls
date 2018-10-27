@@ -14,7 +14,7 @@ parse_name_uf <- function(x) {
   data.frame(
     name = gsub("^\\s+|\\s+$", "", aws_name_uf[1]),
     uf = gsub("^\\s+|\\s+$", "", aws_name_uf[2]),
-    stringsAsFactors = TRUE
+    stringsAsFactors = FALSE
   )
 }
 
@@ -39,7 +39,7 @@ parse_name_uf <- function(x) {
 metadata_parse <- function(data.xls) {
   # data.xls <- awsd
   stopifnot(!missing(data.xls), !is.null(data.xls))
-  data.xls <- as.data.frame(data.xls, stringsAsFactors = TRUE)
+  data.xls <- as.data.frame(data.xls, stringsAsFactors = FALSE)
 
   # norm var names
   data.xls <- setNames(data.xls, nm = str_sanitize(names(data.xls), sep = ""))
@@ -99,7 +99,7 @@ metadata_parse <- function(data.xls) {
   outdf <- data.frame(
     name_uf_df,
     outdf,
-    stringsAsFactors = TRUE
+    stringsAsFactors = FALSE
   )
 
   return(outdf)

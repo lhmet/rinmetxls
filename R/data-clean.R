@@ -4,19 +4,26 @@
 #' @return data frame with the same values as the input data, but colnames are
 #' normalized and dates are parsed.
 #' @details This function parse dates, nomalize 'variable names' appending
-#' the hour after each one. Date column is added in last column.
+#'  the hour after each one. Date column is added in last column.
+#'  Files were processed in Excel and SO Windows. There is a note about the
+#'  origin in dates from Windows Excel. Date given as number of days since
+#'  1900-01-01, e.g.
+#'  \code{as.Date(32768, origin = "1900-01-01")} is a date in 1989.
+#'  Excel is said to use 1900-01-01 as day 1 (Windows default) but
+#'  this is complicated by Excel incorrectly treating 1900 as a leap year.
+#'  We use as origin '1899-12-30' to correctly parse dates. Please see
+#'  \url{http://support.microsoft.com/kb/214330} for details.
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#' #xfiles_l <- list.files("vignettes/dvd_xls_files", recursive = TRUE, full.names = TRUE)
-#' #xls_file <- xfiles_l[1]
-#' #raw_data <- xls_read(xls_file)
-#' #clean_data <- data_clean(raw_data)
-#' #str(clean_data)
+#' xfiles_l <- list.files("vignettes/dvd_xls_files", recursive = TRUE, full.names = TRUE)
+#' xls_file <- xfiles_l[1]
+#' raw_data <- xls_read(xls_file)
+#' clean_data <- data_clean(raw_data)
+#' str(clean_data)
 #'  }
 #' }
 #' @export
-#' @importFrom readr parse_number
 #' @importFrom dplyr mutate
 data_clean <- function(data.xls) {
 
@@ -35,19 +42,14 @@ data_clean <- function(data.xls) {
   # relace name
   names(data.xls)[date_col] <- "date"
 
-  ## NOTE ABOUT DATES FROM WINDOWS EXCEL (ORIGIN)
-  ## date given as number of days since 1900-01-01 (a date in 1989)
-  # as.Date(32768, origin = "1900-01-01")
-  ## Excel is said to use 1900-01-01 as day 1 (Windows default) but
-  ## this is complicated by Excel incorrectly treating 1900 as a leap year.
-  ## So for dates (post-1901) from Windows Excel
-  # as.Date(35981, origin = "1899-12-30") # 1998-07-05
-  ## (these values come from http://support.microsoft.com/kb/214330)
-  # as.Date(as.integer(aws_data[[1]]), origin = "1899-12-30")
-
   # parsing dates ----------------------------------------------------------------
-  date_utc <- readr::parse_number(data.xls$date[-1]) %>%
-    as.Date(origin = "1899-12-30")
+  . <- NULL
+  date_utc <- data.xls$date[-1] %>%
+    as.character() %>%
+    gsub("[^0-9.-]+", "", .) %>%
+    as.numeric() %>%
+    as.Date(., origin = "1899-12-30")
+
   # check discontinuous dates
   stopifnot(unique(diff(date_utc)) == 1)
   dates <- as.POSIXct(date_utc)
@@ -57,6 +59,7 @@ data_clean <- function(data.xls) {
   sel_hour_utc <- hour_utc[sel_cols]
   # how many variables there are in file
   freq_obs_by_hour <- table(sel_hour_utc <- hour_utc[sel_cols])
+
   # check freq by hour
   stopifnot(length(unique(freq_obs_by_hour)) %in% c(1, 2))
 
@@ -66,7 +69,7 @@ data_clean <- function(data.xls) {
   rownames(data.xls) <- NULL
 
   # Indentify variables--------------------------------------------------------
-  # hour and variables
+  # because data are messy, we need to ensure the hour for each variable
   hv <- data.frame(
     v = names(data.xls),
     h = sel_hour_utc,
@@ -74,7 +77,7 @@ data_clean <- function(data.xls) {
   )
   # head(hv, 50)
 
-  # colar colunas de hv para formar nome das variáveis
+  # paste varname and hours
   names(data.xls) <- do.call("paste", c(hv, sep = "_"))
 
   data.xls <- dplyr::mutate(data.xls, date = dates)
