@@ -25,7 +25,7 @@ the table (body data), get metadata from AWS and add it as a attribute of
 output data frame
 }
 \details{
-xlsread() read the data in the excel file and determine
+xls_read() read the data in the excel file and determine
 the limits of the data table, that is, the body of the data (excludes header
 with AWS metadata).
 

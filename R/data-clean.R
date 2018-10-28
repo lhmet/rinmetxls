@@ -25,6 +25,7 @@
 #' }
 #' @export
 #' @importFrom dplyr mutate
+#' @family data processing
 data_clean <- function(data.xls) {
 
   # data.xls <- xls_read(xfiles_l[102])

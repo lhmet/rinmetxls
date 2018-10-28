@@ -12,7 +12,9 @@ Imports:
     dplyr,
     tidyr,
     readxl,
-    stringr
+    stringr,
+    purrr,
+    doBy
 Suggests: 
     knitr,
     rmarkdown,

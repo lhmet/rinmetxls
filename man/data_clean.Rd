@@ -11,7 +11,7 @@ data_clean(data.xls)
 }
 \value{
 data frame with the same values as the input data, but colnames are
-normalized and dates are parsed.
+normalized and dates are parsed. All variables are character vectors.
 }
 \description{
 Clean variable names and parse date
@@ -39,3 +39,8 @@ str(clean_data)
  }
 }
 }
+\seealso{
+Other data processing: \code{\link{tidy_data}},
+  \code{\link{varnames_recode}}
+}
+\concept{data processing}

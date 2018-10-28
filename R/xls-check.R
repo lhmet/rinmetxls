@@ -1,4 +1,5 @@
 # Check the number of xls files found
+#' @family file functions
 xls_check <- function(files.found, file.name, id) {
   # selecionar arquivo
   nfiles <- length(files.found)
