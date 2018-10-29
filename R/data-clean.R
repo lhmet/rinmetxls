@@ -1,3 +1,27 @@
+.dates_messy_parse <- function(dates.messy){
+  # dates.messy <- data.xls$date[-1]
+  # dates parsed with lubridate
+  dates_lub <- suppressWarnings(
+    lubridate::dmy(dates.messy)
+  )
+  dates_num <-  suppressWarnings(
+    as.numeric(gsub("[^0-9.-]+", "", as.character(dates.messy)))
+  )
+  dates_num <-  as.Date(dates_num, origin = "1899-12-30")
+
+  #sum(!is.na(dates_lub))
+  #sum(!is.na(dates_num))
+  dates_ok <- dates_lub
+  dates_ok[is.na(dates_ok)] <- dates_num[is.na(dates_ok)]
+
+  if (any(is.na(dates_ok))){
+    stop("Error parsing dates, possibly there is a third date format.")
+    print(as.character(dates_ok[is.na(dates_ok)]))
+  }
+
+  return(dates_ok)
+}
+
 #' @title Basic cleaning of data
 #' @description Clean variable names and parse date
 #' @param data.xls data frame output from \code{\link{xls_read}}
@@ -28,14 +52,17 @@
 #' @family data processing
 data_clean <- function(data.xls) {
 
-  # data.xls <- xls_read(xfiles_l[102])
+  # data.xls <- xls_read(xfiles_l[1905]) # SM ok
+  # data.xls <- xls_read(xfiles_l[1907]) # Santana do Livram.
 
   Sys.setenv(TZ = "UTC")
   meta <- attr(data.xls, "meta")
+  attr(data.xls, 'meta') <- NULL
+
   data.xls <- setNames(data.xls, str_sanitize(names(data.xls)))
   # sep nouns by a dot
   data.xls <- setNames(data.xls, gsub("_", ".", names(data.xls)))
-  names(data.xls)
+  #names(data.xls)
 
   # seach column with dates
   date_col <- grep("HORA", data.xls[1, ])
@@ -45,11 +72,8 @@ data_clean <- function(data.xls) {
 
   # parsing dates ----------------------------------------------------------------
   . <- NULL
-  date_utc <- data.xls$date[-1] %>%
-    as.character() %>%
-    gsub("[^0-9.-]+", "", .) %>%
-    as.numeric() %>%
-    as.Date(., origin = "1899-12-30")
+
+  date_utc <- .dates_messy_parse(data.xls$date[-1])
 
   # check discontinuous dates
   stopifnot(unique(diff(date_utc)) == 1)

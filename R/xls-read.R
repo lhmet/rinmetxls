@@ -96,8 +96,10 @@ ncols_by_variable <- function(data.xls){
 #'
 #' Automatic meteorological station (AWS) metadata will be extracted from two
 #' sources: (i) the name of the Excel file and (ii) the header in the Excel
-#' file. The metadata is included as an attribute in the data frame with the
-#' data imported from the Excel file.
+#' file. The metadata is included as an attribute named 'meta' in the data frame with the
+#' data imported from the Excel file. You can access metada with
+#' \code{attr(raw_data, 'meta')}.
+#'
 #' @examples
 #' \dontrun{
 #' xls_list <- list.files(
@@ -106,8 +108,8 @@ ncols_by_variable <- function(data.xls){
 #' )
 #' xls_file <- grep("BELEM", xls_list, value = TRUE)[1]
 #' if (file.exists(xls_file)) {
-#'   aws_data <- xls_read(xls_file)
-#'   str(aws_data)
+#'   raw_data <- xls_read(xls_file)
+#'   str(raw_data)
 #' }
 #'}
 #' @seealso
@@ -142,7 +144,7 @@ xls_read <- function(
   meta_j <- metadata_join(path.file = file.xls, data.xls = awsd)
 
   if (verbose) {
-    cat("----------------------------------------", "\n")
+    #cat("----------------------------------------", "\n")
     cat(meta_j$id, "\n")
     cat(paste(meta_j$name, meta_j$uf, sep = " - "), "\n")
     cat(paste(meta_j$name_ffname, meta_j$uf_ffname, sep = " - "), "\n")

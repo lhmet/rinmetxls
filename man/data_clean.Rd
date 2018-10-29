@@ -40,7 +40,7 @@ str(clean_data)
 }
 }
 \seealso{
-Other data processing: \code{\link{tidy_data}},
+Other data processing: \code{\link{data_tidy}},
   \code{\link{varnames_recode}}
 }
 \concept{data processing}

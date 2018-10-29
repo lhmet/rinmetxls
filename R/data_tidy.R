@@ -192,9 +192,9 @@ varnames_recode <- function(varnames
 #'   full.names = TRUE
 #' )
 #' xls_file <- sample(xfiles_l, 1)
-#' data_tidy <- tidy_data(data_clean(xls_read(xls_file)))
-#' str(data_tidy)
-#' #View(data_tidy)
+#' datatidy <- data_tidy(data_clean(xls_read(xls_file)))
+#' str(datatidy)
+#' #View(datatidy)
 #'  }
 #' }
 #' @seealso
@@ -204,17 +204,20 @@ varnames_recode <- function(varnames
 #' @importFrom purrr possibly
 #' @importFrom tidyr gather separate unite spread
 #' @family data processing
-tidy_data <- function(data.clean) {
+data_tidy <- function(data.clean) {
 
   # data.clean <- data_clean(xls_read(xfiles_l[102]))
-  # nrow(data.clean)
 
+  meta <- attr(data.clean, "meta")
+  attr(data.clean, 'meta') <- NULL
+
+  # nrow(data.clean)
   stopifnot("date" %in% names(data.clean))
 
   as.POSIXct.possibly <- purrr::possibly(as.POSIXct, as.POSIXct(NA))
 
   # mult_vars_names <- names(data.clean)[!names(data.clean) %in% c("date", "site")]
-  data_tidy <- data.clean %>%
+  datatidy <- data.clean %>%
     tidyr::gather(
       variable,
       value,
@@ -224,7 +227,7 @@ tidy_data <- function(data.clean) {
     tidyr::separate(variable, c("varname", "h"), sep = "_") %>%
     tidyr::unite(col = date_h, c("date", "h"), sep = " ")
 
-  data_tidy <- data_tidy %>%
+  datatidy <- datatidy %>%
     # because some some xls files are without values (empty)
     dplyr::mutate(
       date = as.POSIXct.possibly(paste0(date_h, ":00:00"), tz = "UTC"),
@@ -232,28 +235,31 @@ tidy_data <- function(data.clean) {
       value = as.numeric(value)
     )
 
-  empty_xls <- all(is.na(data_tidy$date))
+  empty_xls <- all(is.na(datatidy$date))
   if (empty_xls) {
     warning(
       "Excel file is empty, no observations for variables.", "\n",
-      paste0(attr(data.clean, "meta")[["file"]])
+      paste0(meta[["file"]])
     )
 
-    data_tidy$date <- paste0(data_tidy$date, 1:nrow(data_tidy))
-    data_tidy <- data_tidy %>%
+    datatidy$date <- paste0(datatidy$date, 1:nrow(datatidy))
+    datatidy <- datatidy %>%
       tidyr::spread(varname, value) %>%
       setNames(nm = varnames_recode(names(.))) %>%
       dplyr::mutate(date = as.POSIXct.possibly(date))
-    return(data_tidy)
+    attr(datatidy, "meta") <- meta
+    return(datatidy)
   }
 
-  data_tidy <- data_tidy %>%
+  #ID <- attr(data.clean, "meta")[["id"]]
+  datatidy <- datatidy %>%
     tidyr::spread(varname, value) %>%
     # standard varnames
-    setNames(nm = varnames_recode(names(.))) %>%
+    setNames(nm = varnames_recode(names(.))) #%>%
     # add site id
-    dplyr::mutate(site = attr(data.clean, "meta")[["id"]])
+    #dplyr::mutate(id = ID)
 
+  attr(datatidy, "meta") <- meta
   rm(data.clean)
-  return(data_tidy)
+  return(datatidy)
 }
